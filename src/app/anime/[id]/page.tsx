@@ -6,7 +6,13 @@ async function getAnimeDetails(id: string) {
     return data.data;
 }
 
-export default async function AnimeDetailPage({ params }: { params: { id: string } }) {
+type Props = {
+    params: {
+        id: string;
+    };
+};
+
+export default async function AnimeDetailPage({ params }: Props) {
     const anime = await getAnimeDetails(params.id);
 
     return (
