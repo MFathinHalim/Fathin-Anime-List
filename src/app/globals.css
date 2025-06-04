@@ -37,3 +37,7 @@ body {
 .Jersey10 {
   font-family: "Jersey 10", sans-serif !important;
 }
+
+aside::-webkit-scrollbar {
+  display: none;
+}

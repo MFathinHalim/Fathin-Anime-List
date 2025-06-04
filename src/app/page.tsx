@@ -154,7 +154,7 @@ export default function Home() {
   useEffect(() => {
     const fetchFeaturedAnime = async () => {
       try {
-        const res = await fetch("https://api.jikan.moe/v4/anime?genres=22&order_by=score&sort=desc");
+        const res = await fetch("https://api.jikan.moe/v4/anime?order_by=score&sort=desc");
         const data = await res.json();
         if (data.data && data.data.length > 0) {
           const randomIndex = Math.floor(Math.random() * data.data.length);
@@ -214,7 +214,7 @@ export default function Home() {
         <div className="relative w-full overflow-hidden bg-black/30 mb-5">
 
           {featuredAnime?.images?.webp?.large_image_url && (
-            <>
+            <div>
               {/* Gambar Background (blur dan gelap) */}
               <img
                 src={featuredAnime.images.webp.large_image_url}
@@ -227,7 +227,7 @@ export default function Home() {
                 <h1 className="text-2xl text-center lg:mb-4 font-bold">Fathin's Anime List</h1>
 
               </div>
-            </>
+            </div>
           )}
 
           {/* Optional: Tambahkan lapisan gelap kalau ingin lebih kontras */}
@@ -324,9 +324,9 @@ export default function Home() {
       </div>
 
       {/* Kanan: Sidebar Top Airing */}
-      <aside className="w-full md:w-72 md:border-l border-white/20 md:pl-4">
+      <aside className="w-full md:w-72 md:border-l border-white/20 md:pl-4 max-h-[100vh] sticky top-0 overflow-y-auto">
 
-        <div className="flex gap-2 mb-4 my-4 md:block hidden">
+        <div className="flex gap-2 md:block sticky top-0 bg-black py-4  hidden ">
           <input
             type="text"
             value={query}
