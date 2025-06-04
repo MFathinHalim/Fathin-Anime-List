@@ -12,7 +12,7 @@ type Props = {
     };
 };
 
-export default async function AnimeDetailPage({ params }: Props) {
+export default async function AnimeDetailPage({ params }: any) {
     const anime = await getAnimeDetails(params.id);
 
     return (
