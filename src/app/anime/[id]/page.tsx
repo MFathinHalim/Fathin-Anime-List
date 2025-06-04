@@ -132,7 +132,7 @@ export default function AnimeDetailPage({ params }: any) {
                                     className="w-20 h-28 object-cover rounded"
                                 />
                             )}
-                            <div className="flex-1 flex justify-between">
+                            <div className="flex-1 flex flex-col md:flex-row justify-between">
                                 <div>
                                     <h3 className="font-semibold">{char?.character?.name || "Unknown"}</h3>
                                     <p className="text-sm text-white/50">{char?.role || "Unknown Role"}</p>
