@@ -26,7 +26,7 @@ export default function Home() {
   const [results, setResults] = useState<Anime[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [topAiring, setTopAiring] = useState<Anime[]>([]);
-  const [featuredAnime, setFeaturedAnime] = useState(null);
+  const [featuredAnime, setFeaturedAnime] = useState<any>(null);
 
   const defaultAnimes: Anime[] = [
     {
