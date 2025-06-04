@@ -5,7 +5,6 @@ import React, { useState, useEffect, useRef } from "react";
 async function getAnimeDetails(id: string) {
     const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`);
     const data = await res.json();
-    console.log(data);
     return data.data;
 }
 
@@ -20,6 +19,13 @@ async function getAnimeStaff(id: string) {
     const data = await res.json();
     return Array.isArray(data.data) ? data.data : [];
 }
+
+async function getAnimeReviews(id: string) {
+    const res = await fetch(`https://api.jikan.moe/v4/anime/${id}/reviews`);
+    const data = await res.json();
+    return Array.isArray(data.data) ? data.data : [];
+}
+
 
 const aniListIdQuery = `
 query ($malId: Int) {
@@ -109,16 +115,17 @@ function StreamingPlatforms({ streamingPlatforms }: { streamingPlatforms: any[] 
     };
 
     return (
-        <section className="max-w-6xl mx-auto px-6 md:px-12 pb-12 gap-10">
+        <section id="streaming-platforms" className="max-w-6xl mx-auto px-6 md:px-12 pb-12 gap-10">
             <h2 className="text-3xl font-bold mb-4 text-white">Episodes List</h2>
 
             {streamingPlatforms.length > 0 ? (
                 <div
+                    id="streaming-platforms"
                     ref={scrollRef}
                     className="flex gap-6 overflow-x-auto"
                     onMouseMove={onMouseMove}
                     onMouseLeave={onMouseLeave}
-                    style={{ scrollbarWidth: "none", userSelect: "none", cursor: "pointer" }}
+                    style={{ userSelect: "none", cursor: "pointer" }}
                 >
                     {streamingPlatforms.map((platform, idx) => (
                         <a
@@ -177,7 +184,14 @@ export default function AnimeDetailPage({ id }: any) {
     const [staffShowMore, setStaffShowMore] = useState(false);
     const [streamingPlatforms, setStreamingPlatforms] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [reviews, setReviews] = useState<any[]>([]);
 
+    const [selectedTag, setSelectedTag] = useState("All");
+    const filteredReviews = selectedTag === "All"
+        ? reviews
+        : reviews.filter((r) =>
+            r.tags?.some((tag: string) => tag.toLowerCase() === selectedTag.toLowerCase())
+        );
     useEffect(() => {
         async function fetchData() {
             setLoading(true);
@@ -185,7 +199,9 @@ export default function AnimeDetailPage({ id }: any) {
             const animeDetail = await getAnimeDetails(id);
             const animeChars = await getAnimeCharacters(id);
             const animeStaff = await getAnimeStaff(id);
+            const animeReviews = await getAnimeReviews(id);
 
+            setReviews(animeReviews);
             setAnime(animeDetail);
             setCharacters(animeChars);
             setStaff(animeStaff);
@@ -221,14 +237,11 @@ export default function AnimeDetailPage({ id }: any) {
                         className="w-full h-full object-cover blur-sm brightness-50 scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                    <div className="absolute bottom-10 left-10">
+                    <div className="absolute bottom-10 left-5 md:left-10">
                         <a className="text-sm text-white/30 hover:text-white/50" href="/">
                             Back to Home
                         </a>
-                        <h1 className="mt-2 text-3xl md:text-4xl font-bold drop-shadow-lg">
-                            <span className="text-orange-300">#{anime.rank || "-"}</span>
-                        </h1>
-                        <h1 className="text-4xl md:text-3xl mb-3 text-white/50 font-bold drop-shadow-lg">
+                        <h1 className="text-4xl md:text-3xl my-3 text-white/50 font-bold drop-shadow-lg">
                             {anime.title_english || anime.title}
                         </h1>
                         <h1 className="text-4xl md:text-5xl font-bold drop-shadow-lg w-[90vw]">{anime.title}</h1>
@@ -305,6 +318,8 @@ export default function AnimeDetailPage({ id }: any) {
                                 />
                             </div>
                         )}
+                        <p className="text-lg leading-relaxed mb-3 text-justify"><span className="font-semibold text-white">Rank:</span> #{anime.rank || ""} <span className="font-semibold text-white">Popularity:</span> #{anime.popularity || ""} <span className="font-semibold text-white">Members:</span> {anime.members.toLocaleString("id-ID") || ""} </p>
+                        <p className="text-lg leading-relaxed mb-3 text-justify"><span className="font-semibold text-white">Favorites:</span> {anime.favorites.toLocaleString("id-ID") || ""}</p>
                         <p className="text-sm leading-relaxed mb-6 text-justify">{anime.background || ""}</p>
                         <p className="text-white font-bold text-lg mb-3">Synopsis</p>
                         <p className="text-sm leading-relaxed mb-6 text-justify">{anime.synopsis || "-"}</p>
@@ -312,7 +327,9 @@ export default function AnimeDetailPage({ id }: any) {
                             <span className="font-semibold text-white">Producers:</span>{" "}
                             {anime.producers?.map((p: any) => p.name).join(", ") || "-"}
                         </p>
-
+                        <a href={anime.url} className="text-gray-300 mb-3">
+                            <span className="font-semibold text-white">Check on My Anime List</span>
+                        </a>
 
                     </div>
                 </section>
@@ -398,6 +415,87 @@ export default function AnimeDetailPage({ id }: any) {
                         </button>
                     )}
                 </section>
+
+                {/* Reviews */}
+                <section className="max-w-6xl mx-auto px-6 md:px-12 pb-12">
+                    <div className="flex justify-between items-center">
+
+                        <h2 className="text-2xl font-bold mb-4">User Reviews</h2>
+                        <div className="mb-4">
+                            <select
+                                value={selectedTag}
+                                onChange={(e) => setSelectedTag(e.target.value)}
+                                className="bg-white/10 cursor-pointer rounded-full text-white px-3 py-2 outline-none"
+                            >
+                                <option className="bg-neutral-800 cursor-pointer text-white" value="All">All</option>
+                                <option className="bg-neutral-800 cursor-pointer text-white" value="Recommended">Recommended</option>
+                                <option className="bg-neutral-800 cursor-pointer text-white" value="Mixed Feelings">Mixed Feelings</option>
+                                <option className="bg-neutral-800 cursor-pointer text-white" value="Not Recommended">Not Recommended</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    {reviews.length > 0 ? (
+                        <div className="space-y-6">
+                            {filteredReviews.slice(0, 5).map((review) => (
+                                <div key={review.mal_id} className="bg-white/5 p-4 rounded-lg">
+                                    <div className="flex gap-4 mb-4">
+
+                                        {review.user.images?.jpg?.image_url && (
+                                            <img
+                                                src={review.user.images.jpg.image_url}
+                                                alt={review.user.name}
+                                                className="w-13 h-13 object-cover rounded-full"
+                                            />
+                                        )}
+                                        <div>
+                                            <p className="text-white font-semibold"> {review.user?.username || "Anonymous"} </p>
+                                            <div className="flex flex-wrap gap-2 pt-1">
+                                                {review.tags?.map((tag: string, index: number) => (
+                                                    <span
+                                                        key={index}
+                                                        className="bg-white/10 text-white/70 text-xs px-2 py-1 rounded"
+                                                    >
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {review.reactions && (
+                                        <div className="my-2 text-xs text-gray-400 flex flex-wrap gap-3">
+                                            {Object.entries(review.reactions as Record<string, number>).map(([key, value]) => {
+                                                if (value > 0) {
+                                                    return (
+                                                        <span key={key} className="bg-white/10 px-2 py-1 rounded">
+                                                            {key.replace(/_/g, " ")}: {value}
+                                                        </span>
+                                                    );
+                                                }
+                                                return null;
+                                            })}
+                                        </div>
+                                    )}
+                                    <p className="text-sm text-white/60 mb-2">Type: {review.type} Score: {review.score}</p>
+                                    <p className="text-sm text-white/80 text-justify">{review.review.slice(0, 500)}... <a
+                                        href={review.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-400 text-sm hover:underline"
+                                    >
+                                        Read full review
+                                    </a></p>
+                                </div>
+                            ))}
+                            <a href={anime.url} className="text-gray-300 mb-3">
+                                <span className="font-semibold text-white">Check other reviews</span>
+                            </a>
+                        </div>
+                    ) : (
+                        <p className="text-gray-400 italic text-center">No reviews available.</p>
+                    )}
+                </section>
+
             </main>
         </>
     );

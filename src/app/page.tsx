@@ -154,12 +154,10 @@ export default function Home() {
   useEffect(() => {
     const fetchFeaturedAnime = async () => {
       try {
-        const res = await fetch("https://api.jikan.moe/v4/anime?order_by=score&sort=desc");
+        const res = await fetch("https://api.jikan.moe/v4/random/anime");
         const data = await res.json();
-        if (data.data && data.data.length > 0) {
-          const randomIndex = Math.floor(Math.random() * data.data.length);
-          setFeaturedAnime(data.data[randomIndex]);
-        }
+        setFeaturedAnime(data.data);
+
       } catch (err) {
         console.error("Failed to fetch featured anime", err);
       } finally {
@@ -253,7 +251,7 @@ export default function Home() {
             <>
               <Link href={`/anime/${featuredAnime.mal_id}`} key={`${featuredAnime.mal_id}-${featuredAnime.title}`}>
 
-                <div className="relative w-full h-auto rounded-2xl hover:bg-gray-800/40">
+                <div className="relative w-full h-auto rounded-2xl hover:bg-gray-400/50">
                   {featuredAnime && (
                     <>
                       <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:p-4">

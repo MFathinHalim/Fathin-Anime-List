@@ -38,7 +38,25 @@ body {
   font-family: "Jersey 10", sans-serif !important;
 }
 
-aside::-webkit-scrollbar,
-#streaming-platforms::-webkit-scrollbar {
+aside::-webkit-scrollbar {
   display: none;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: transparent !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }
