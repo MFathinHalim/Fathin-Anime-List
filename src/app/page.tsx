@@ -235,7 +235,17 @@ export default function Home() {
               </div>
             </div>
           )}
-
+          <div className="flex gap-2 mb-4 my-4 md:hidden ">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") searchAnime();
+              }} placeholder="Search"
+              className="border p-2 px-4 border-white/80 w-full"
+            />
+          </div>
           {/* Optional: Tambahkan lapisan gelap kalau ingin lebih kontras */}
           <div className="absolute inset-0 bg-black/80"></div>
 
@@ -243,10 +253,10 @@ export default function Home() {
             <>
               <Link href={`/anime/${featuredAnime.mal_id}`} key={`${featuredAnime.mal_id}-${featuredAnime.title}`}>
 
-                <div className="relative hidden lg:block w-full h-auto rounded-2xl hover:bg-gray-800/40">
+                <div className="relative w-full h-auto rounded-2xl hover:bg-gray-800/40">
                   {featuredAnime && (
                     <>
-                      <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-4">
+                      <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:p-4">
                         {/* Gambar Kiri */}
                         <img
                           src={featuredAnime.images.webp.large_image_url}
@@ -255,7 +265,7 @@ export default function Home() {
                         />
 
                         {/* Info Kanan */}
-                        <div className="flex-1 text-white text-center md:text-left">
+                        <div className="flex-1 text-white">
                           <h1 className="mt-2 text-3xl md:text-4xl font-bold drop-shadow-lg">
                             <span className="text-orange-300">#{featuredAnime.rank}</span>
                           </h1>
@@ -266,7 +276,7 @@ export default function Home() {
                           <p className="text-md md:text-sm mb-3 text-white/90 max-w-2xl line-clamp-3">
                             {featuredAnime.synopsis}
                           </p>
-                          <div className="flex flex-wrap gap-2 justify-center md:justify-start text-sm">
+                          <div className="flex flex-wrap gap-2 justify-start text-sm">
                             <p className="text-gray-300">
                               <span className="font-semibold text-white">Genres:</span>{" "}
                               {featuredAnime.genres.map((g: any) => g.name).join(", ")}, {featuredAnime.themes.map((g: any) => g.name).join(", ")}
@@ -293,17 +303,7 @@ export default function Home() {
             <div className="flex justify-center items-center w-full h-full text-white text-lg mt-6">Loading featured anime...</div>
           )}
         </div>
-        <div className="flex gap-2 mb-4 my-4 md:hidden ">
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") searchAnime();
-            }} placeholder="Search"
-            className="border p-2 px-4 border-white/30 w-full"
-          />
-        </div>
+
         {loading && <p className="text-center">Searching...</p>}
 
         <div className="grid grid-cols-2 md:grid-cols-4 ">
