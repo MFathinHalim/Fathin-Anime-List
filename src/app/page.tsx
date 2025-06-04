@@ -206,6 +206,13 @@ export default function Home() {
 
     fetchTopAiring();
   }, []);
+  useEffect(() => {
+    if (results.length > 0) {
+      setFeaturedAnime(results[0]);
+
+    }
+  }, [results]);
+
 
   return (
     <main className="flex flex-col md:flex-row px-6 max-w-7xl mx-auto gap-6">
@@ -302,7 +309,7 @@ export default function Home() {
         {loading && <p className="text-center">Searching...</p>}
 
         <div className="grid grid-cols-2 md:grid-cols-4 ">
-          {(results.length === 0 ? defaultAnimes : results).map((anime) => (
+          {(results.length === 0 ? defaultAnimes : results.slice(1)).map((anime) => (
             <Link href={`/anime/${anime.mal_id}`} key={`${anime.mal_id}-${anime.title}`}>
               <div className="w-full h-full hover:bg-gray-400/50 p-2 mb-5 transition cursor-pointer flex flex-col">
                 <img
