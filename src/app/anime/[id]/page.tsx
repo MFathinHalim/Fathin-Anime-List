@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Head from "next/head";
 
 async function getAnimeDetails(id: string) {
     const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`);
@@ -212,192 +213,212 @@ export default function AnimeDetailPage({ params }: any) {
     if (loading || !anime) return <div className="text-white p-6">Loading...</div>;
 
     return (
-        <main className="relative min-h-screen bg-[#0f0f0f] text-white">
-            {/* Hero */}
-            <div className="relative h-[60vh] w-full overflow-hidden">
-                <img
-                    src={anime.images?.webp?.large_image_url}
-                    alt={anime.title || "Anime Image"}
-                    className="w-full h-full object-cover blur-sm brightness-50 scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                <div className="absolute bottom-10 left-10">
-                    <a className="text-sm text-white/30 hover:text-white/50" href="/">
-                        Back to Home
-                    </a>
-                    <h1 className="mt-2 text-3xl md:text-4xl font-bold drop-shadow-lg">
-                        <span className="text-orange-300">#{anime.rank || "-"}</span>
-                    </h1>
-                    <h1 className="text-4xl md:text-3xl mb-3 text-white/50 font-bold drop-shadow-lg">
-                        {anime.title_english || anime.title}
-                    </h1>
-                    <h1 className="text-4xl md:text-5xl font-bold drop-shadow-lg w-[90vw]">{anime.title}</h1>
-                    <h1 className="text-2xl md:text-2xl my-3 text-white/50 font-bold drop-shadow-lg">
-                        {anime.title_japanese || ""}
-                    </h1>
-                </div>
-            </div>
+        <>
+            <Head>
+                <title>{anime.title} - Anime Detail</title>
+                <meta name="description" content={anime.synopsis?.slice(0, 150) || "Anime synopsis"} />
 
-            {/* Info Section */}
-            <section className="max-w-6xl mx-auto px-6 md:px-12 py-12 grid md:grid-cols-3 gap-10">
-                {/* Sidebar */}
-                <div className="md:col-span-1 space-y-4">
+                {/* Open Graph / Facebook */}
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content={anime.title} />
+                <meta property="og:description" content={anime.synopsis?.slice(0, 150) || "Anime synopsis"} />
+                <meta property="og:image" content={anime.images?.webp?.large_image_url} />
+                <meta property="og:url" content={`https://fanimelist.vercel.app/anime/${id}`} />
+
+                {/* Twitter */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={anime.title} />
+                <meta name="twitter:description" content={anime.synopsis?.slice(0, 150) || "Anime synopsis"} />
+                <meta name="twitter:image" content={anime.images?.webp?.large_image_url} />
+            </Head>
+
+            <main className="relative min-h-screen bg-[#0f0f0f] text-white">
+                {/* Hero */}
+                <div className="relative h-[60vh] w-full overflow-hidden">
                     <img
                         src={anime.images?.webp?.large_image_url}
-                        alt={anime.title}
-                        className="w-full rounded-xl shadow-lg aspect-[2/3] object-cover"
+                        alt={anime.title || "Anime Image"}
+                        className="w-full h-full object-cover blur-sm brightness-50 scale-105"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                    <div className="absolute bottom-10 left-10">
+                        <a className="text-sm text-white/30 hover:text-white/50" href="/">
+                            Back to Home
+                        </a>
+                        <h1 className="mt-2 text-3xl md:text-4xl font-bold drop-shadow-lg">
+                            <span className="text-orange-300">#{anime.rank || "-"}</span>
+                        </h1>
+                        <h1 className="text-4xl md:text-3xl mb-3 text-white/50 font-bold drop-shadow-lg">
+                            {anime.title_english || anime.title}
+                        </h1>
+                        <h1 className="text-4xl md:text-5xl font-bold drop-shadow-lg w-[90vw]">{anime.title}</h1>
+                        <h1 className="text-2xl md:text-2xl my-3 text-white/50 font-bold drop-shadow-lg">
+                            {anime.title_japanese || ""}
+                        </h1>
+                    </div>
+                </div>
 
-                    <div className="bg-white/5 p-6 rounded-xl shadow-md space-y-4 text-sm">
-                        <p className="text-gray-300">
-                            <span className="font-semibold text-white">Status:</span> {anime.status || "-"}
-                        </p>
-                        <p className="text-gray-300">
-                            <span className="font-semibold text-white">Aired:</span> {anime.aired?.string || "-"}
-                        </p>
-                        <p className="text-gray-300">
-                            <span className="font-semibold text-white">Episodes:</span> {anime.episodes || "?"}
-                        </p>
-                        <p className="text-gray-300">
-                            <span className="font-semibold text-white">Durations:</span> {anime.duration || "-"}
-                        </p>
-                        <hr />
+                {/* Info Section */}
+                <section className="max-w-6xl mx-auto px-6 md:px-12 py-12 grid md:grid-cols-3 gap-10">
+                    {/* Sidebar */}
+                    <div className="md:col-span-1 space-y-4">
+                        <img
+                            src={anime.images?.webp?.large_image_url}
+                            alt={anime.title}
+                            className="w-full rounded-xl shadow-lg aspect-[2/3] object-cover"
+                        />
 
-                        <p className="text-gray-300">
-                            <span className="font-semibold text-white">Broadcast Day:</span> {anime.broadcast?.day || "-"}
-                        </p>
-                        <p className="text-gray-300">
-                            <span className="font-semibold text-white">Rating:</span> {anime.rating || "?"}
-                        </p>
-                        <p className="text-gray-300">
-                            <span className="font-semibold text-white">Genres:</span>{" "}
-                            {[...(anime.genres || []), ...(anime.themes || [])].map((g: any) => g.name).join(", ")}
-                        </p>
-                        <hr />
-                        <p className="text-gray-300"><span className="font-semibold text-white">Synonim:</span> {anime.synonim || "-"}</p>
-                        <p className="text-gray-300 mb-3">
-                            <span className="font-semibold text-white">Source:</span> {anime.source || "-"}
-                        </p>
-                        <p className="text-gray-300">
-                            <span className="font-semibold text-white">Studios:</span>{" "}
-                            {anime.studios?.map((s: any) => s.name).join(", ") || "-"}
-                        </p>
-                        <p className="text-gray-300">
-                            <span className="font-semibold text-white">Licensors:</span>{" "}
-                            {anime.licensors?.map((s: any) => s.name).join(", ") || "-"}
-                        </p>
-                        <p className="text-gray-300">
-                            <span className="font-semibold text-white">Score:</span> {anime.score || "-"} by {anime.scored_by ? anime.scored_by.toLocaleString("id-ID") : "?"} users
-                        </p>
+                        <div className="bg-white/5 p-6 rounded-xl shadow-md space-y-4 text-sm">
+                            <p className="text-gray-300">
+                                <span className="font-semibold text-white">Status:</span> {anime.status || "-"}
+                            </p>
+                            <p className="text-gray-300">
+                                <span className="font-semibold text-white">Aired:</span> {anime.aired?.string || "-"}
+                            </p>
+                            <p className="text-gray-300">
+                                <span className="font-semibold text-white">Episodes:</span> {anime.episodes || "?"}
+                            </p>
+                            <p className="text-gray-300">
+                                <span className="font-semibold text-white">Durations:</span> {anime.duration || "-"}
+                            </p>
+                            <hr />
+
+                            <p className="text-gray-300">
+                                <span className="font-semibold text-white">Broadcast Day:</span> {anime.broadcast?.day || "-"}
+                            </p>
+                            <p className="text-gray-300">
+                                <span className="font-semibold text-white">Rating:</span> {anime.rating || "?"}
+                            </p>
+                            <p className="text-gray-300">
+                                <span className="font-semibold text-white">Genres:</span>{" "}
+                                {[...(anime.genres || []), ...(anime.themes || [])].map((g: any) => g.name).join(", ")}
+                            </p>
+                            <hr />
+                            <p className="text-gray-300"><span className="font-semibold text-white">Synonim:</span> {anime.synonim || "-"}</p>
+                            <p className="text-gray-300 mb-3">
+                                <span className="font-semibold text-white">Source:</span> {anime.source || "-"}
+                            </p>
+                            <p className="text-gray-300">
+                                <span className="font-semibold text-white">Studios:</span>{" "}
+                                {anime.studios?.map((s: any) => s.name).join(", ") || "-"}
+                            </p>
+                            <p className="text-gray-300">
+                                <span className="font-semibold text-white">Licensors:</span>{" "}
+                                {anime.licensors?.map((s: any) => s.name).join(", ") || "-"}
+                            </p>
+                            <p className="text-gray-300">
+                                <span className="font-semibold text-white">Score:</span> {anime.score || "-"} by {anime.scored_by ? anime.scored_by.toLocaleString("id-ID") : "?"} users
+                            </p>
+                        </div>
+
                     </div>
 
-                </div>
-
-                {/* Main Content */}
-                <div className="md:col-span-2 flex flex-col">
-                    {anime.trailer?.youtube_id && (
-                        <div className="aspect-video mb-6">
-                            <iframe
-                                className="w-full h-full rounded-xl"
-                                src={`https://www.youtube.com/embed/${anime.trailer.youtube_id}`}
-                                title="Trailer"
-                                allowFullScreen
-                            />
-                        </div>
-                    )}
-                    <p className="text-sm leading-relaxed mb-6 text-justify">{anime.background || ""}</p>
-                    <p className="text-white font-bold text-lg mb-3">Synopsis</p>
-                    <p className="text-sm leading-relaxed mb-6 text-justify">{anime.synopsis || "-"}</p>
-                    <p className="text-gray-300 mb-3">
-                        <span className="font-semibold text-white">Producers:</span>{" "}
-                        {anime.producers?.map((p: any) => p.name).join(", ") || "-"}
-                    </p>
-
-
-                </div>
-            </section>
-
-            {/* Streaming platforms */}
-            <StreamingPlatforms streamingPlatforms={streamingPlatforms} />
-
-            {/* Characters */}
-            <section className="max-w-6xl mx-auto px-6 md:px-12 pb-12">
-                <h2 className="text-2xl font-bold mb-4">Characters & Voice Actors</h2>
-                <div className="grid md:grid-cols-2 gap-6 mb-6">
-                    {(charShowMore ? characters : characters.slice(0, 10)).map((char: any) => (
-                        <div
-                            key={char?.character?.mal_id}
-                            className="flex gap-4 bg-white/5 p-4 rounded-lg items-center"
-                        >
-                            {char?.character?.images?.webp?.image_url && (
-                                <img
-                                    src={char.character.images.webp.image_url}
-                                    alt={char.character.name}
-                                    className="w-20 h-28 object-cover rounded"
+                    {/* Main Content */}
+                    <div className="md:col-span-2 flex flex-col">
+                        {anime.trailer?.youtube_id && (
+                            <div className="aspect-video mb-6">
+                                <iframe
+                                    className="w-full h-full rounded-xl"
+                                    src={`https://www.youtube.com/embed/${anime.trailer.youtube_id}`}
+                                    title="Trailer"
+                                    allowFullScreen
                                 />
-                            )}
-                            <div className="flex-1 flex flex-col md:flex-row justify-between">
-                                <div>
-                                    <h3 className="font-semibold">{char?.character?.name || "Unknown"}</h3>
-                                    <p className="text-sm text-white/50">{char?.role || "Unknown Role"}</p>
-                                </div>
-                                {char?.voice_actors?.[0] && (
-                                    <div className="text-right">
-                                        <h3 className="font-semibold">{char.voice_actors[0]?.person?.name}</h3>
-                                        <p className="text-sm text-white/50">{char?.voice_actors[0]?.language || ""}</p>
+                            </div>
+                        )}
+                        <p className="text-sm leading-relaxed mb-6 text-justify">{anime.background || ""}</p>
+                        <p className="text-white font-bold text-lg mb-3">Synopsis</p>
+                        <p className="text-sm leading-relaxed mb-6 text-justify">{anime.synopsis || "-"}</p>
+                        <p className="text-gray-300 mb-3">
+                            <span className="font-semibold text-white">Producers:</span>{" "}
+                            {anime.producers?.map((p: any) => p.name).join(", ") || "-"}
+                        </p>
+
+
+                    </div>
+                </section>
+
+                {/* Streaming platforms */}
+                <StreamingPlatforms streamingPlatforms={streamingPlatforms} />
+
+                {/* Characters */}
+                <section className="max-w-6xl mx-auto px-6 md:px-12 pb-12">
+                    <h2 className="text-2xl font-bold mb-4">Characters & Voice Actors</h2>
+                    <div className="grid md:grid-cols-2 gap-6 mb-6">
+                        {(charShowMore ? characters : characters.slice(0, 10)).map((char: any) => (
+                            <div
+                                key={char?.character?.mal_id}
+                                className="flex gap-4 bg-white/5 p-4 rounded-lg items-center"
+                            >
+                                {char?.character?.images?.webp?.image_url && (
+                                    <img
+                                        src={char.character.images.webp.image_url}
+                                        alt={char.character.name}
+                                        className="w-20 h-28 object-cover rounded"
+                                    />
+                                )}
+                                <div className="flex-1 flex flex-col md:flex-row justify-between">
+                                    <div>
+                                        <h3 className="font-semibold">{char?.character?.name || "Unknown"}</h3>
+                                        <p className="text-sm text-white/50">{char?.role || "Unknown Role"}</p>
                                     </div>
+                                    {char?.voice_actors?.[0] && (
+                                        <div className="text-right">
+                                            <h3 className="font-semibold">{char.voice_actors[0]?.person?.name}</h3>
+                                            <p className="text-sm text-white/50">{char?.voice_actors[0]?.language || ""}</p>
+                                        </div>
+                                    )}
+                                </div>
+                                {char?.voice_actors?.[0]?.person?.images?.jpg?.image_url && (
+                                    <img
+                                        src={char.voice_actors[0].person.images.jpg.image_url}
+                                        alt={char.voice_actors[0].person.name}
+                                        className="w-20 h-28 object-cover rounded"
+                                    />
                                 )}
                             </div>
-                            {char?.voice_actors?.[0]?.person?.images?.jpg?.image_url && (
-                                <img
-                                    src={char.voice_actors[0].person.images.jpg.image_url}
-                                    alt={char.voice_actors[0].person.name}
-                                    className="w-20 h-28 object-cover rounded"
-                                />
-                            )}
-                        </div>
-                    ))}
-                </div>
-                {characters.length > 10 && (
-                    <button
-                        className="text-sm text-blue-400 hover:underline"
-                        onClick={() => setCharShowMore((prev) => !prev)}
-                    >
-                        {charShowMore ? "Show Less" : "Show More"}
-                    </button>
-                )}
-
-                {/* Staff */}
-                <h2 className="text-2xl font-bold mt-12 mb-4">Staff</h2>
-                <div className="grid md:grid-cols-2 gap-6 mb-6">
-                    {(staffShowMore ? staff : staff.slice(0, 10)).map((person: any) => (
-                        <div
-                            key={person.person.mal_id}
-                            className="bg-white/5 p-4 rounded-lg flex items-center gap-4"
+                        ))}
+                    </div>
+                    {characters.length > 10 && (
+                        <button
+                            className="text-sm text-blue-400 hover:underline"
+                            onClick={() => setCharShowMore((prev) => !prev)}
                         >
-                            {person.person.images?.jpg?.image_url && (
-                                <img
-                                    src={person.person.images.jpg.image_url}
-                                    alt={person.person.name}
-                                    className="w-16 h-16 object-cover rounded-full"
-                                />
-                            )}
-                            <div>
-                                <h3 className="font-semibold">{person.person.name}</h3>
-                                <p className="text-sm text-white/50">{person.positions.join(", ")}</p>
+                            {charShowMore ? "Show Less" : "Show More"}
+                        </button>
+                    )}
+
+                    {/* Staff */}
+                    <h2 className="text-2xl font-bold mt-12 mb-4">Staff</h2>
+                    <div className="grid md:grid-cols-2 gap-6 mb-6">
+                        {(staffShowMore ? staff : staff.slice(0, 10)).map((person: any) => (
+                            <div
+                                key={person.person.mal_id}
+                                className="bg-white/5 p-4 rounded-lg flex items-center gap-4"
+                            >
+                                {person.person.images?.jpg?.image_url && (
+                                    <img
+                                        src={person.person.images.jpg.image_url}
+                                        alt={person.person.name}
+                                        className="w-16 h-16 object-cover rounded-full"
+                                    />
+                                )}
+                                <div>
+                                    <h3 className="font-semibold">{person.person.name}</h3>
+                                    <p className="text-sm text-white/50">{person.positions.join(", ")}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-                {staff.length > 10 && (
-                    <button
-                        className="text-sm text-blue-400 hover:underline"
-                        onClick={() => setStaffShowMore((prev) => !prev)}
-                    >
-                        {staffShowMore ? "Show Less" : "Show More"}
-                    </button>
-                )}
-            </section>
-        </main>
+                        ))}
+                    </div>
+                    {staff.length > 10 && (
+                        <button
+                            className="text-sm text-blue-400 hover:underline"
+                            onClick={() => setStaffShowMore((prev) => !prev)}
+                        >
+                            {staffShowMore ? "Show Less" : "Show More"}
+                        </button>
+                    )}
+                </section>
+            </main>
+        </>
     );
 }
