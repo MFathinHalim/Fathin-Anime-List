@@ -26,6 +26,8 @@ export default function Home() {
   const [results, setResults] = useState<Anime[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [topAiring, setTopAiring] = useState<Anime[]>([]);
+  const [featuredAnime, setFeaturedAnime] = useState(null);
+
   const defaultAnimes: Anime[] = [
     {
       mal_id: 50739,
@@ -149,7 +151,24 @@ export default function Home() {
     },
   ];
 
+  useEffect(() => {
+    const fetchFeaturedAnime = async () => {
+      try {
+        const res = await fetch("https://api.jikan.moe/v4/anime?genres=22&order_by=score&sort=desc");
+        const data = await res.json();
+        if (data.data && data.data.length > 0) {
+          const randomIndex = Math.floor(Math.random() * data.data.length);
+          setFeaturedAnime(data.data[randomIndex]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch featured anime", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchFeaturedAnime();
+  }, []);
   const searchAnime = async () => {
     if (!query.trim()) return;
     setLoading(true);
@@ -192,17 +211,82 @@ export default function Home() {
     <main className="flex flex-col md:flex-row px-6 max-w-7xl mx-auto gap-6">
       {/* Kiri: Search dan Hasil */}
       <div className="flex-1">
-        <div className="relative w-full h-32 my-4 rounded-2xl overflow-hidden">
-          <img
-            src="https://img.uhdpaper.com/wallpaper/cyberpunk-anime-girl-cat-sci-fi-city-164@3@a"
-            alt="Anime Cover"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <h1 className="text-2xl font-bold text-white/30 text-center heading-font">
-              Fathin's Anime List
-            </h1>
-          </div>
+        <div className="relative w-full overflow-hidden bg-black/30 mb-5">
+
+          {featuredAnime?.images?.webp?.large_image_url && (
+            <>
+              {/* Gambar Background (blur dan gelap) */}
+              <img
+                src={featuredAnime.images.webp.large_image_url}
+                alt={featuredAnime.title}
+                className="absolute inset-0 w-full h-20 object-cover blur-sm brightness-50 scale-105"
+              />
+
+              {/* Overlay Teks di Atas Gambar */}
+              <div className="relative z-10 py-5 text-white text-center">
+                <h1 className="text-2xl text-center lg:mb-4 font-bold">Fathin's Anime List</h1>
+
+              </div>
+            </>
+          )}
+
+          {/* Optional: Tambahkan lapisan gelap kalau ingin lebih kontras */}
+          <div className="absolute inset-0 bg-black/80"></div>
+
+          {featuredAnime?.images?.webp?.image_url ? (
+            <>
+              <Link href={`/anime/${featuredAnime.mal_id}`} key={`${featuredAnime.mal_id}-${featuredAnime.title}`}>
+
+                <div className="relative hidden lg:block w-full h-auto rounded-2xl hover:bg-gray-800/40">
+                  {featuredAnime && (
+                    <>
+                      <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-4">
+                        {/* Gambar Kiri */}
+                        <img
+                          src={featuredAnime.images.webp.image_url}
+                          alt={featuredAnime.title}
+                          className="w-full md:w-1/4 aspect-[2/3] rounded-lg object-cover shadow-lg"
+                        />
+
+                        {/* Info Kanan */}
+                        <div className="flex-1 text-white text-center md:text-left">
+                          <h1 className="mt-3 text-xl md:text-xl mb-3 text-white/50 font-bold drop-shadow-lg"><span className="text-white/50">#{featuredAnime.rank}</span> {featuredAnime.title_english}</h1>
+                          <h1 className="text-2xl md:text-3xl font-bold drop-shadow-lg">{featuredAnime.title}</h1>
+                          <h1 className="text-xl md:text-xl my-3 text-white/50 font-bold drop-shadow-lg">{featuredAnime.title_japanese}</h1>
+
+                          <p className="text-md md:text-sm mb-3 text-white/90 max-w-2xl line-clamp-3">
+                            {featuredAnime.synopsis}
+                          </p>
+                          <div className="flex flex-wrap gap-2 justify-center md:justify-start text-sm">
+                            <p className="text-gray-300">
+                              <span className="font-semibold text-white">Genres:</span>{" "}
+                              {featuredAnime.genres.map((g: any) => g.name).join(", ")}, {featuredAnime.themes.map((g: any) => g.name).join(", ")}
+                            </p>
+                            <p className="text-gray-300"><span className="font-semibold text-white">Aired:</span> {featuredAnime.aired.string} </p>
+                            <p className="text-gray-300"><span className="font-semibold text-white">Status:</span> {featuredAnime.status}</p>
+                            <p className="text-gray-300"><span className="font-semibold text-white">Score:</span> {featuredAnime.score || "-"}</p>
+
+                            <hr />
+                            <p className="text-gray-300">
+                              <span className="font-semibold text-white">Studios:</span>{" "}
+                              {featuredAnime.studios?.map((s: any) => s.name).join(", ") || "-"}
+                            </p>
+
+                          </div>
+                        </div>
+
+                      </div>
+
+
+                    </>
+                  )}
+
+                </div>
+              </Link>
+            </>
+          ) : (
+            <div className="flex justify-center items-center w-full h-full text-white text-lg mt-6">Loading featured anime...</div>
+          )}
         </div>
         <div className="flex gap-2 mb-4 my-4 md:hidden ">
           <input
@@ -278,6 +362,6 @@ export default function Home() {
           ))}
         </div>
       </aside>
-    </main>
+    </main >
   );
 }
