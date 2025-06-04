@@ -35,7 +35,7 @@ export default function Home() {
       synopsis: "A heartwarming story about the angel next door.",
       images: {
         webp: {
-          image_url: "https://cdn.myanimelist.net/images/anime/1240/133638.webp",
+          image_url: "https://cdn.myanimelist.net/images/anime/1240/133638l.webp",
         },
       },
       genres: [{ name: "Romance" }],
@@ -50,7 +50,7 @@ export default function Home() {
       synopsis: "Two strangers find themselves mysteriously linked.",
       images: {
         webp: {
-          image_url: "https://cdn.myanimelist.net/images/anime/5/87048.webp",
+          image_url: "https://cdn.myanimelist.net/images/anime/5/87048l.webp",
         },
       },
       genres: [{ name: "Drama" }],
@@ -65,7 +65,7 @@ export default function Home() {
       synopsis: "Rhythm game starring Hatsune Miku and friends.",
       images: {
         webp: {
-          image_url: "https://cdn.myanimelist.net/images/anime/1883/144526.webp",
+          image_url: "https://cdn.myanimelist.net/images/anime/1883/144526l.webp",
         },
       },
       genres: [{ name: "Music" }],
@@ -80,7 +80,7 @@ export default function Home() {
       synopsis: "An emotional fantasy adventure.",
       images: {
         webp: {
-          image_url: "https://cdn.myanimelist.net/images/anime/1015/138006.webp",
+          image_url: "https://cdn.myanimelist.net/images/anime/1015/138006l.webp",
         },
       },
       genres: [{ name: "Fantasy" }],
@@ -95,7 +95,7 @@ export default function Home() {
       synopsis: "A mystery solving high school story.",
       images: {
         webp: {
-          image_url: "https://cdn.myanimelist.net/images/anime/13/50521.webp",
+          image_url: "https://cdn.myanimelist.net/images/anime/13/50521l.webp",
         },
       },
       genres: [{ name: "Mystery" }],
@@ -110,7 +110,7 @@ export default function Home() {
       synopsis: "Supernatural powers disrupt the lives of teens.",
       images: {
         webp: {
-          image_url: "https://cdn.myanimelist.net/images/anime/1826/147276.webp",
+          image_url: "https://cdn.myanimelist.net/images/anime/1826/147276l.webp",
         },
       },
       genres: [{ name: "Supernatural" }],
@@ -140,7 +140,7 @@ export default function Home() {
       synopsis: "A young girl and her robot friend descend into a mysterious abyss.",
       images: {
         webp: {
-          image_url: "https://cdn.myanimelist.net/images/anime/6/86733.webp",
+          image_url: "https://cdn.myanimelist.net/images/anime/6/86733l.webp",
         },
       },
       genres: [{ name: "Adventure" }, { name: "Drama" }],
@@ -224,7 +224,7 @@ export default function Home() {
             <div>
               {/* Gambar Background (blur dan gelap) */}
               <img
-                src={featuredAnime.images.webp.large_image_url}
+                src={featuredAnime.images.webp.image_url}
                 alt={featuredAnime.title}
                 className="absolute inset-0 w-full h-20 object-cover blur-sm brightness-50 scale-105"
               />
@@ -232,7 +232,6 @@ export default function Home() {
               {/* Overlay Teks di Atas Gambar */}
               <div className="relative z-10 py-5 text-white text-center">
                 <h1 className="text-2xl text-center lg:mb-4 font-bold">Fathin's Anime List</h1>
-
               </div>
             </div>
           )}
@@ -240,7 +239,7 @@ export default function Home() {
           {/* Optional: Tambahkan lapisan gelap kalau ingin lebih kontras */}
           <div className="absolute inset-0 bg-black/80"></div>
 
-          {featuredAnime?.images?.webp?.image_url ? (
+          {featuredAnime?.images?.webp?.large_image_url ? (
             <>
               <Link href={`/anime/${featuredAnime.mal_id}`} key={`${featuredAnime.mal_id}-${featuredAnime.title}`}>
 
@@ -250,14 +249,17 @@ export default function Home() {
                       <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-4">
                         {/* Gambar Kiri */}
                         <img
-                          src={featuredAnime.images.webp.image_url}
+                          src={featuredAnime.images.webp.large_image_url}
                           alt={featuredAnime.title}
                           className="w-full md:w-1/4 aspect-[2/3] rounded-lg object-cover shadow-lg"
                         />
 
                         {/* Info Kanan */}
                         <div className="flex-1 text-white text-center md:text-left">
-                          <h1 className="mt-3 text-xl md:text-xl mb-3 text-white/50 font-bold drop-shadow-lg"><span className="text-white/50">#{featuredAnime.rank}</span> {featuredAnime.title_english}</h1>
+                          <h1 className="mt-2 text-3xl md:text-4xl font-bold drop-shadow-lg">
+                            <span className="text-orange-300">#{featuredAnime.rank}</span>
+                          </h1>
+                          <h1 className="text-xl md:text-xl mb-3 text-white/50 font-bold drop-shadow-lg"> {featuredAnime.title_english}</h1>
                           <h1 className="text-2xl md:text-3xl font-bold drop-shadow-lg">{featuredAnime.title}</h1>
                           <h1 className="text-xl md:text-xl my-3 text-white/50 font-bold drop-shadow-lg">{featuredAnime.title_japanese}</h1>
 
@@ -278,13 +280,9 @@ export default function Home() {
                               <span className="font-semibold text-white">Studios:</span>{" "}
                               {featuredAnime.studios?.map((s: any) => s.name).join(", ") || "-"}
                             </p>
-
                           </div>
                         </div>
-
                       </div>
-
-
                     </>
                   )}
 

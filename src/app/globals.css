@@ -38,6 +38,7 @@ body {
   font-family: "Jersey 10", sans-serif !important;
 }
 
-aside::-webkit-scrollbar {
+aside::-webkit-scrollbar,
+#streaming-platforms::-webkit-scrollbar {
   display: none;
 }
