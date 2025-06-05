@@ -329,7 +329,7 @@ export default function Home() {
       {/* Kanan: Sidebar Top Airing */}
       <aside className="w-full md:w-72 md:border-l border-white/20 md:pl-4 max-h-[100vh] sticky top-0 overflow-y-auto">
 
-        <div className="flex gap-2 md:block sticky top-0 bg-black/30 backdrop-blur-sm py-4  hidden ">
+        <div className="flex gap-2 md:block sticky top-0 py-4  hidden ">
           <input
             type="text"
             value={query}
@@ -337,7 +337,7 @@ export default function Home() {
             onKeyDown={(e) => {
               if (e.key === "Enter") searchAnime();
             }} placeholder="Search"
-            className="border p-2 px-4 border-white/30 w-full"
+            className="border p-2 px-4 border-white/30 bg-black/30 backdrop-blur-sm w-full"
           />
         </div>
         <h2 className="text-xl font-bold mb-4">Top Airing Anime</h2>
