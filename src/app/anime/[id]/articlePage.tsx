@@ -143,7 +143,7 @@ function StreamingPlatforms({ streamingPlatforms }: { streamingPlatforms: any[] 
                                     className="h-20 rounded-md object-cover flex-shrink-0"
                                 />
                             ) : (
-                                <div className="w-16 h-16 rounded-md bg-gray-700 flex items-center justify-center text-gray-400">
+                                <div className="w-16 h-16 rounded-md bg-stone-700 flex items-center justify-center text-gray-400">
                                     N/A
                                 </div>
                             )}
@@ -174,6 +174,63 @@ function StreamingPlatforms({ streamingPlatforms }: { streamingPlatforms: any[] 
         </section>
     );
 }
+
+function SkeletonAnimeDetail() {
+    return (
+        <main className="relative min-h-screen bg-[#0f0f0f] text-white animate-pulse">
+            {/* Hero Skeleton */}
+            <div className="relative h-[60vh] w-full overflow-hidden bg-stone-800">
+                <div className="absolute bottom-10 left-5 md:left-10 space-y-4">
+                    <div className="w-32 h-4 bg-stone-700 rounded" />
+                    <div className="w-60 h-6 bg-stone-700 rounded" />
+                    <div className="w-24 h-4 bg-stone-700 rounded" />
+                </div>
+            </div>
+
+            {/* Info Section Skeleton */}
+            <section className="max-w-6xl mx-auto px-6 md:px-12 py-12 grid md:grid-cols-3 gap-10">
+                <div className="space-y-4">
+                    <div className="w-full aspect-[2/3] bg-stone-700 rounded-xl" />
+                    <div className="bg-white/5 p-6 rounded-xl space-y-3">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="h-3 w-2/3 bg-stone-700 rounded" />
+                        ))}
+                        <hr />
+                        {[...Array(5)].map((_, i) => (
+                            <div key={i} className="h-3 w-1/2 bg-stone-700 rounded" />
+                        ))}
+                    </div>
+                </div>
+
+                <div className="md:col-span-2 flex flex-col space-y-4">
+                    <div className="w-full aspect-video bg-stone-700 rounded-xl" />
+                    <div className="h-4 w-1/2 bg-stone-700 rounded" />
+                    <div className="h-4 w-1/3 bg-stone-700 rounded" />
+                    <div className="h-3 w-full bg-stone-700 rounded" />
+                    <div className="h-3 w-3/4 bg-stone-700 rounded" />
+                    <div className="h-4 w-40 bg-stone-700 rounded" />
+                </div>
+            </section>
+
+            {/* Streaming Skeleton */}
+            <section className="max-w-6xl mx-auto px-6 md:px-12 pb-12">
+                <div className="h-6 w-40 bg-stone-700 rounded mb-4" />
+                <div className="flex gap-6 overflow-x-auto">
+                    {[...Array(3)].map((_, i) => (
+                        <div key={i} className="min-w-[300px] bg-neutral-800 rounded-lg p-4 flex gap-4">
+                            <div className="w-20 h-20 bg-stone-600 rounded-md" />
+                            <div className="flex flex-col justify-center space-y-2">
+                                <div className="w-32 h-4 bg-stone-600 rounded" />
+                                <div className="w-24 h-3 bg-stone-500 rounded" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        </main>
+    );
+}
+
 
 export default function AnimeDetailPage({ id }: any) {
 
@@ -224,7 +281,7 @@ export default function AnimeDetailPage({ id }: any) {
         fetchData();
     }, [id]);
 
-    if (loading || !anime) return <div className="text-white p-6">Loading...</div>;
+    if (loading || !anime) return <SkeletonAnimeDetail />;
 
     return (
         <>
